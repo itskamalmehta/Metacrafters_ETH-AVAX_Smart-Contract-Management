@@ -8,7 +8,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const initBalance = 50; //initial balance
+  const initBalance = 0; //initial balance
   const Assessment = await hre.ethers.getContractFactory("Assessment");
   const assessment = await Assessment.deploy(initBalance); //initiates the deployment of the contract 
   await assessment.deployed();
