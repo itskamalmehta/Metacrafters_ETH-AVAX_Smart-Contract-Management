@@ -102,7 +102,7 @@ export default function HomePage() {
 
     return (
       <div>
-        <p style={{ position: 'fixed', bottom: '60px', left: '20px' }}>Wallet Address: {account}</p> //for changing its position on webpage 
+        <p style={{ position: 'fixed', bottom: '60px', left: '20px' }}>Wallet Address: {account}</p> 
         <input
           type="number"
           value={depositAmount}
@@ -150,10 +150,10 @@ export default function HomePage() {
           text-align: center;
           background: 
             linear-gradient(
-              rgba(255, 255, 255, 0.5), //for adjusting background image's transparency
+              rgba(255, 255, 255, 0.5), 
               rgba(255, 255, 255, 0.5)
             ),
-          url('https://thumbor.forbes.com/thumbor/fit-in/1290x/https://www.forbes.com/advisor/wp-content/uploads/2021/03/ethereum-1.jpeg'); //background image
+          url('https://thumbor.forbes.com/thumbor/fit-in/1290x/https://www.forbes.com/advisor/wp-content/uploads/2021/03/ethereum-1.jpeg'); 
           background-size: cover;
           background-position: center;
           height: 97vh;
@@ -161,10 +161,10 @@ export default function HomePage() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          background-color: #4682b4; //works as a fallback incase background image did not load properly
+          background-color: #4682b4; 
         } 
         header {
-          color: #FF7700; //colour for heading
+          color: #FF7700; 
         }
       `}
       </style>
