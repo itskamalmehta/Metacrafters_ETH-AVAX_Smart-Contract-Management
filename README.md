@@ -51,6 +51,9 @@ Using the Interface:
 
 2. Click on 'Click here to connect your Metamask wallet' and connect your Metamask with EthClub Exchange.
 
+![image](https://github.com/itskamalmehta/Metacrafters_ETH-AVAX_Smart-Contract-Management/assets/112396717/1936d839-b994-4a07-8eb8-7dccc7762892)
+
+
 3. Now you can Transfer ETH, Withdraw ETH, Withdraw All ETH, check Wallet balance, see Transaction history and wallet address. t
    They all function as their name suggests.
 
