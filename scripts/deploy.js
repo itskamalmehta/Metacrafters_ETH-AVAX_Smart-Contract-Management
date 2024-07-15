@@ -5,17 +5,18 @@
 // global scope, and execute the script.
 
 //Importing Hardhat Runtime Environment
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  const initBalance = 0; //initial balance
-  const Assessment = await hre.ethers.getContractFactory("Assessment");
-  const assessment = await Assessment.deploy(initBalance); //initiates the deployment of the contract 
-  await assessment.deployed();
+  const initBalance = ethers.utils.parseEther("10");
+  const ETHCLUB = await ethers.getContractFactory("ETHCLUB");
+  const ethClub = await ETHCLUB.deploy(initBalance);
 
-  console.log(`A smart contract with initial balance of ${initBalance} ETH was deployed to address: ${assessment.address}`);
+  await ethClub.deployed();
+
+  console.log("ETHCLUB deployed to:", ethClub.address);
 }
-// handling error during execution
+
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
