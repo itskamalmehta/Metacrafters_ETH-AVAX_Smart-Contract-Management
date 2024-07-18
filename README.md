@@ -47,15 +47,19 @@ Using the Interface:
 
 1. Click on http://localhost:3000/ (present on Termial 1st end) and it will redirect to your browser and open the project's interface.
 
-![image](https://github.com/itskamalmehta/Metacrafters_ETH-AVAX_Smart-Contract-Management/assets/112396717/100cbe7a-a8c9-4049-9ec3-5a5f1991d891)
+![1](https://github.com/user-attachments/assets/8fb21a94-1888-44af-8b22-32b8c1fdc6fe)
+
 
 2. Click on 'Click here to connect your Metamask wallet' and connect your Metamask with EthClub Exchange.
 
-![image](https://github.com/itskamalmehta/Metacrafters_ETH-AVAX_Smart-Contract-Management/assets/112396717/1936d839-b994-4a07-8eb8-7dccc7762892)
+![2](https://github.com/user-attachments/assets/c3aee21b-d10b-4c03-b4a7-a9c9576bf359)
 
 
 3. Now you can Transfer ETH, Withdraw ETH, Withdraw All ETH, check Wallet balance, see Transaction history and wallet address. t
    They all function as their name suggests.
+
+![3](https://github.com/user-attachments/assets/fa875997-5cc2-4a6d-84de-e8fe2fcc14c3)
+
 
 ## Code for ETHCLUB.sol
 
