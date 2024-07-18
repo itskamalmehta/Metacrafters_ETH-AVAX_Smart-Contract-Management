@@ -1,10 +1,10 @@
 # Metacrafters_Eth-Avax_Smart-Contract-Management
 
-The project Smart Contract Management is a DApp that allows users to connect their Ethereum wallet, view their balance, and perform deposit and withdrawal transactions.
+This project "EthClub Exchange" provides users with a interface to manage their Ethereum funds directly from their MetaMask wallet.
 
 ## Description
 
-This project "EthClub Exchange" provides users with a interface to manage their Ethereum funds directly from their MetaMask wallet. The core functionality includes connecting to a user's Ethereum wallet, displaying the wallet's address and balance, and enabling deposit and withdrawal transactions.
+EthClub Exchange is a decentralized platform designed for secure Ethereum transactions. Users can deposit, withdraw, and track their transaction history effortlessly. The platform imposes a daily withdrawal limit of 1000 ETH to ensure controlled usage and prevent excessive withdrawals. Integrated with MetaMask, it provides a seamless experience for connecting and managing Ethereum wallets.
 
 It is designed with the help of React.js and uses the ethers.js library to interact with the smart contracts. the frontend interface is simple and user-friendly.
 
