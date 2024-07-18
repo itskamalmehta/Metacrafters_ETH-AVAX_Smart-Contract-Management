@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import atm_abi from "../artifacts/contracts/ETHCLUB.sol/ETHCLUB.json";
 
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; 
+
 export default function HomePage() {
   const [ethWallet, setEthWallet] = useState(undefined);
   const [account, setAccount] = useState(undefined);
@@ -13,43 +15,44 @@ export default function HomePage() {
   const [transactionCount, setTransactionCount] = useState(0);
   const [dailyWithdrawLimitReached, setDailyWithdrawLimitReached] = useState(false);
 
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // Update with your contract address
-  const atmABI = atm_abi.abi;
-
-  const getWallet = async () => {
-    if (window.ethereum) {
-      setEthWallet(window.ethereum);
-    } else {
-      alert("MetaMask is required to use EthClub");
-    }
-  };
-
-  const handleAccount = (accounts) => {
-    if (accounts.length > 0) {
-      setAccount(accounts[0]);
-      getATMContract(accounts[0]);
-    } else {
-      console.log("No accounts found");
-    }
-  };
-
-  const connectAccount = async () => {
-    try {
-      if (!ethWallet) {
-        alert("MetaMask wallet needed to continue.");
-        return;
+  useEffect(() => {
+    const initializeWallet = async () => {
+      if (window.ethereum) {
+        setEthWallet(window.ethereum);
+      } else {
+        alert("MetaMask is required to use EthClub");
       }
-      const accounts = await ethWallet.request({ method: "eth_requestAccounts" });
-      handleAccount(accounts);
-    } catch (error) {
-      console.error("Error connecting to MetaMask", error);
-    }
-  };
+    };
+    initializeWallet();
+  }, []);
 
-  const getATMContract = (account) => {
+  useEffect(() => {
+    if (ethWallet) {
+      ethWallet.request({ method: "eth_accounts" }).then(accounts => {
+        if (accounts.length > 0) {
+          setAccount(accounts[0]);
+          getATMContract(accounts[0]);
+        } else {
+          console.log("No accounts found");
+        }
+      });
+    }
+  }, [ethWallet]);
+
+  useEffect(() => {
+    if (atm) {
+      const fetchATMData = async () => {
+        await getBalance();
+        await getTransactions();
+      };
+      fetchATMData();
+    }
+  }, [atm]);
+
+  const getATMContract = async (account) => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner(account);
-    const atmContract = new ethers.Contract(contractAddress, atmABI, signer);
+    const atmContract = new ethers.Contract(contractAddress, atm_abi.abi, signer);
     setATM(atmContract);
   };
 
@@ -71,43 +74,43 @@ export default function HomePage() {
       const oneDayAgo = Math.floor(Date.now() / 1000) - (24 * 60 * 60);
 
       transactions.forEach(tx => {
-        if (tx.transactionType === "Withdraw" && tx.timestamp > oneDayAgo) {
-          dailyWithdrawn += parseFloat(ethers.utils.formatEther(tx.amount));
+        if (tx.transactionType === "Withdraw" || tx.transactionType === "WithdrawAll") {
+          if (tx.timestamp > oneDayAgo) {
+            dailyWithdrawn += parseFloat(ethers.utils.formatEther(tx.amount));
+          }
         }
       });
 
-      if (dailyWithdrawn >= 1000) {
-        setDailyWithdrawLimitReached(true);
-      } else {
-        setDailyWithdrawLimitReached(false);
-      }
+      setDailyWithdrawLimitReached(dailyWithdrawn >= 1000);
     }
   };
 
-  const deposit = async () => {
+  const handleDeposit = async () => {
     if (atm) {
       const tx = await atm.deposit({ value: ethers.utils.parseEther(depositAmount) });
       await tx.wait();
-      getBalance();
-      getTransactions();
+      await getBalance();
+      await getTransactions();
+      setDepositAmount("");
     }
   };
 
-  const withdraw = async () => {
+  const handleWithdraw = async () => {
     if (atm && !dailyWithdrawLimitReached) {
       const tx = await atm.withdraw(ethers.utils.parseEther(withdrawAmount));
       await tx.wait();
-      getBalance();
-      getTransactions();
+      await getBalance();
+      await getTransactions();
+      setWithdrawAmount("");
     }
   };
 
-  const withdrawAll = async () => {
+  const handleWithdrawAll = async () => {
     if (atm && !dailyWithdrawLimitReached) {
       const tx = await atm.withdrawAll();
       await tx.wait();
-      getBalance();
-      getTransactions();
+      await getBalance();
+      await getTransactions();
     }
   };
 
@@ -131,7 +134,7 @@ export default function HomePage() {
           onChange={(e) => setDepositAmount(e.target.value)}
           placeholder="Enter amount to deposit in ETH"
         />
-        <button onClick={deposit}>Transfer ETH</button>
+        <button onClick={handleDeposit}>Transfer ETH</button>
         <p></p>
         <input
           type="number"
@@ -140,11 +143,12 @@ export default function HomePage() {
           placeholder="Enter amount to withdraw in ETH"
           disabled={dailyWithdrawLimitReached}
         />
-        <button onClick={withdraw} disabled={dailyWithdrawLimitReached}>Withdraw ETH</button>
+        <button onClick={handleWithdraw} disabled={dailyWithdrawLimitReached}>Withdraw ETH</button>
         <p></p>
-        <button onClick={withdrawAll} disabled={dailyWithdrawLimitReached}>Withdraw All ETH</button>
+        <button onClick={handleWithdrawAll} disabled={dailyWithdrawLimitReached}>Withdraw All ETH</button>
         <p>Wallet Balance: {balance}</p>
         <p style={{ position: 'fixed', bottom: '20px', right: '40px' }}>Number of Transactions: {transactionCount}</p>
+        {dailyWithdrawLimitReached && <p style={{ color: 'red' }}>Daily withdrawal limit of 1000 ETH reached!</p>}
         <h3>Transaction History</h3>
         <ul>
           {transactions.map((tx, index) => (
@@ -157,21 +161,23 @@ export default function HomePage() {
     );
   };
 
-  useEffect(() => {
-    getWallet();
-  }, []);
-
-  useEffect(() => {
-    if (ethWallet) {
-      ethWallet.request({ method: "eth_accounts" }).then(handleAccount);
+  const connectAccount = async () => {
+    try {
+      if (!ethWallet) {
+        alert("MetaMask wallet needed to continue.");
+        return;
+      }
+      const accounts = await ethWallet.request({ method: "eth_requestAccounts" });
+      if (accounts.length > 0) {
+        setAccount(accounts[0]);
+        getATMContract(accounts[0]);
+      } else {
+        console.log("No accounts found");
+      }
+    } catch (error) {
+      console.error("Error connecting to MetaMask", error);
     }
-  }, [ethWallet]);
-
-  useEffect(() => {
-    if (atm) {
-      getTransactions();
-    }
-  }, [atm]);
+  };
 
   return (
     <main className="container">
