@@ -55,11 +55,10 @@ Using the Interface:
 ![2](https://github.com/user-attachments/assets/c3aee21b-d10b-4c03-b4a7-a9c9576bf359)
 
 
-3. Now you can Transfer ETH, Withdraw ETH, Withdraw All ETH, check Wallet balance, see Transaction history and wallet address. t
-   They all function as their name suggests.
+3. Now you can Transfer ETH, Withdraw ETH, Withdraw All ETH, check Wallet balance, see Transaction history and wallet address, no. of transaction etc.
 
 ![3](https://github.com/user-attachments/assets/fa875997-5cc2-4a6d-84de-e8fe2fcc14c3)
-
+                                  fig.3- User Interface when the 1000 ETH Withdrawl limit is reached.
 
 ## Code for ETHCLUB.sol
 
